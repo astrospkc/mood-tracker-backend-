@@ -5,7 +5,7 @@ import Journals from "../models/Journal.js";
 // import { body, validationResult } from "express-validator";
 
 //Route 0: Get all data in home page: GET : journals/getalldata, login not required
-const getAllData = async (req, res) => {
+export const getAllData = async (req, res) => {
   // console.log("get all data ", req.body);
   try {
     const journals = await Journals.find();
@@ -35,11 +35,11 @@ const fetchData = async (req, res) => {
 const addJournal = async (req, res) => {
   //   console.log("user id: ", req.user._id);
   console.log("Inside add journal:", req.body);
-  const { title, description } = req.body;
+  const { title } = req.body;
   try {
     const journal = new Journals({
       title,
-      description,
+
       user: req.user._id,
     });
     const savedJournal = await journal.save();
@@ -53,7 +53,7 @@ const addJournal = async (req, res) => {
 // Route 3: update notes PUT: journals/updatenotes , Login required
 const updateJournal = async (req, res) => {
   // console.log("getting the id", req.user.id);
-  const { title, description, tag } = req.body;
+  const { title } = req.body;
   // console.log("update:", req.body);
   try {
     // create new note object
@@ -61,9 +61,7 @@ const updateJournal = async (req, res) => {
     if (title) {
       newJournal.title = title;
     }
-    if (description) {
-      newJournal.description = description;
-    }
+
     // console.log("newNote:", newNote);
 
     // find the note to be updated and update it

@@ -7,9 +7,10 @@ const JournalSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
-    title: { type: String, required: true },
+    title: { type: String, required: true, unique: true },
 
-    body: String,
+    journals: [{ type: mongoose.Schema.Types.ObjectId, ref: "weekJournal" }],
+    img: String,
     date: { type: Date, default: Date.now },
   },
   { timestamps: true }
