@@ -7,7 +7,7 @@ const JournalSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
-    title: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
 
     journals: [{ type: mongoose.Schema.Types.ObjectId, ref: "weekJournal" }],
     img: String,

@@ -11,12 +11,10 @@ const WeekJournalSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "journal",
       required: true,
-      unique: true,
     },
     title: {
       type: String,
       required: true,
-      unique: true,
     },
 
     body: String,

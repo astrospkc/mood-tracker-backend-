@@ -9,22 +9,18 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const item = data;
 
 let stored = [];
-export async function run() {
+export async function run(data) {
   try {
     let prompt;
-    for (let i = 0; i < item.length; i++) {
-      console.log("item: ", item[i]);
-      prompt = `what the following data is expressing the mood ${item[i]}`;
+    console.log("data:", data);
+    for (let i = 0; i < data.length; i++) {
+      console.log("item: ", item[i].body);
+      prompt = `what a writer is feeling about this text ${item[i]}, mention only the key points in list. The result should be in json format.`;
       const result = await model.generateContent(prompt); // Use await here
       stored.push(result.response.text());
     }
     console.log("stored: ", stored);
-    const pr = stored[0];
-    const res = await model.generateContent(pr);
-    const summarize = res.response.text();
-
-    console.log("res: ", summarize);
-    return summarize;
+    return stored;
   } catch (error) {
     console.error("Error generating content:", error);
   }
