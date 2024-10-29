@@ -14,8 +14,8 @@ export async function run(data) {
     let prompt;
     console.log("data:", data);
     for (let i = 0; i < data.length; i++) {
-      console.log("item: ", item[i].body);
-      prompt = `what a writer is feeling about this text ${item[i]}, mention only the key points in list. The result should be in json format.`;
+      // console.log("item: ", data[i].body);
+      prompt = `what a writer is feeling about this text ${data[i]}, mention only the key points in list. The result should be in json format.`;
       const result = await model.generateContent(prompt); // Use await here
       stored.push(result.response.text());
     }

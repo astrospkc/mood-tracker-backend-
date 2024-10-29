@@ -1,7 +1,7 @@
 import express from "express";
 import fetchuser from "../middleware/fetchUser.js";
 const router = express.Router();
-import Journals from "../models/Journal.js";
+import Journal from "../models/Journal.js";
 // import { body, validationResult } from "express-validator";
 
 //Route 0: Get all data in home page: GET : journals/getalldata, login not required
@@ -22,7 +22,7 @@ const fetchData = async (req, res) => {
   // console.log("fetch data ", req.body);
   try {
     // console.log("fetching data....");
-    const journals = await Journals.find({ user: req.user._id });
+    const journals = await Journals.find({ user: req.user.id });
     // console.log("notes: ", notes);
     res.json(journals);
   } catch (error) {
@@ -33,14 +33,14 @@ const fetchData = async (req, res) => {
 
 // Route 1: Add notes POST: journals/addnotes , Login required
 const addJournal = async (req, res) => {
-  //   console.log("user id: ", req.user._id);
+  //   console.log("user id: ", req.user.id);
   console.log("Inside add journal:", req.body);
   const { title } = req.body;
   try {
-    const journal = new Journals({
+    const journal = new Journal({
       title,
 
-      user: req.user._id,
+      user: req.user.id,
     });
     const savedJournal = await journal.save();
     console.log("savedJournal", savedJournal);
@@ -72,7 +72,7 @@ const updateJournal = async (req, res) => {
       return res.status(404).send("Not Found");
     }
     // console.log("note user:", note.user);
-    if (journal.user.toString() !== req.user._id) {
+    if (journal.user.toString() !== req.user.id) {
       return res.status(401).send("Not allowed");
     }
 
@@ -98,11 +98,11 @@ const deleteJournal = async (req, res) => {
       return res.status(404).send("Not Found");
     }
 
-    if (note.user.toString() !== req.user._id) {
+    if (note.user.toString() !== req.user.id) {
       return res.status(401).send("Not allowed");
     }
 
-    note = await Notes.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
+    note = await Journals.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
     // console.log("Deleted note: " + note);
     res.json({ Success: "Note has been deleted.", note: note });
   } catch (error) {

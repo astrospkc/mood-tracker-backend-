@@ -29,7 +29,7 @@ router.post(
       }
 
       const salt = await bcrypt.genSalt(10);
-      const secPass = await bcrypt.hashSync(req.body.password, salt);
+      const secPass = bcrypt.hashSync(req.body.password, salt);
 
       // create a user
       user = await User.create({
@@ -44,6 +44,7 @@ router.post(
         },
       };
 
+      // const authtoken = jwt.sign({ data }, JWT_SECRET, { expiresIn: "1h" });
       const authtoken = jwt.sign(data, JWT_SECRET);
       success = true;
 
@@ -86,7 +87,9 @@ router.post(
         },
       };
 
+      // const authtoken = jwt.sign({ data }, JWT_SECRET, { expiresIn: "1h" });
       const authtoken = jwt.sign(data, JWT_SECRET);
+
       success = true;
       console.log("req.headers: ", req.headers);
       console.log(success, authtoken);
@@ -103,7 +106,7 @@ router.post(
 // ROUTE 3: get user details, POST : "api/auth/getuser" Login required
 router.get("/getuser/:userid", fetchuser, async (req, res) => {
   try {
-    // const userId = req.user._id;
+    // const userId = req.user.id;
     const userId = req.params.userid;
     const user = await User.findById(userId).select("password");
     res.send(user);
