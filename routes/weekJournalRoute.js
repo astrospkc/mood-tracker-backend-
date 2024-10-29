@@ -71,6 +71,18 @@ const fetchWeekJournal = async (req, res) => {
   }
 };
 
+const fetchWeekDayJournalwith_id = async (req, res) => {
+  const { day_id } = req.params;
+  console.log("day id: ", day_id);
+  try {
+    const data = await WeekJournal.findById(day_id);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json("Internal error occurred");
+  }
+};
+
 const summarizeWeekJournal = async (req, res) => {
   const { id } = req.params;
   const user_id = req.user.id;
@@ -89,4 +101,5 @@ const summarizeWeekJournal = async (req, res) => {
 router.post("/create", fetchuser, createWeekJournal);
 router.get("/fetchJournal/:id", fetchuser, fetchWeekJournal);
 router.get("/summarizeJournal/:id", fetchuser, summarizeWeekJournal);
+router.get("/fetchJournal/:id/:day_id", fetchuser, fetchWeekDayJournalwith_id);
 export default router;

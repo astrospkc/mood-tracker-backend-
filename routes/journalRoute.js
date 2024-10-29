@@ -8,7 +8,7 @@ import Journal from "../models/Journal.js";
 export const getAllData = async (req, res) => {
   // console.log("get all data ", req.body);
   try {
-    const journals = await Journals.find();
+    const journals = await Journal.find();
     // console.log("notes: ", notes);
     res.json(journals);
   } catch (error) {
@@ -22,9 +22,21 @@ const fetchData = async (req, res) => {
   // console.log("fetch data ", req.body);
   try {
     // console.log("fetching data....");
-    const journals = await Journals.find({ user: req.user.id });
+    const journals = await Journal.find({ user: req.user.id });
     // console.log("notes: ", notes);
     res.json(journals);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal error occurred");
+  }
+};
+
+// fetch journal with id
+const fetchJournalwith_id = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const journal = await Journal.findById(id);
+    res.json(journal);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal error occurred");
@@ -66,7 +78,7 @@ const updateJournal = async (req, res) => {
 
     // find the note to be updated and update it
     // console.log(req.params.id);
-    let journal = await Journals.findById(req.params.id);
+    let journal = await Journal.findById(req.params.id);
     // console.log("note:", note);
     if (!journal) {
       return res.status(404).send("Not Found");
@@ -76,7 +88,7 @@ const updateJournal = async (req, res) => {
       return res.status(401).send("Not allowed");
     }
 
-    note = await Journals.findByIdAndUpdate(
+    note = await Journal.findByIdAndUpdate(
       req.params.id,
       { $set: newNote },
       { new: true }
@@ -129,6 +141,7 @@ const searchJournal = async (req, res) => {
 
 router.get("/getAllJournal", fetchuser, getAllData);
 router.get("/fetchData", fetchuser, fetchData);
+router.get("/fetchData/:id", fetchuser, fetchJournalwith_id);
 router.post("/addJournal", fetchuser, addJournal);
 router.put("/edit", fetchuser, updateJournal);
 router.delete("/deleteJournal", fetchuser, deleteJournal);
