@@ -4,19 +4,6 @@ const router = express.Router();
 import Journal from "../models/Journal.js";
 // import { body, validationResult } from "express-validator";
 
-//Route 0: Get all data in home page: GET : journals/getalldata, login not required
-export const getAllData = async (req, res) => {
-  // console.log("get all data ", req.body);
-  try {
-    const journals = await Journal.find();
-    // console.log("notes: ", notes);
-    res.json(journals);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal error occurred");
-  }
-};
-
 // Route 1: Fetch user data  GET: journals/fetchdata , Login required
 const fetchData = async (req, res) => {
   // console.log("fetch data ", req.body);
@@ -139,7 +126,6 @@ const searchJournal = async (req, res) => {
   }
 };
 
-router.get("/getAllJournal", fetchuser, getAllData);
 router.get("/fetchData", fetchuser, fetchData);
 router.get("/fetchData/:id", fetchuser, fetchJournalwith_id);
 router.post("/addJournal", fetchuser, addJournal);
