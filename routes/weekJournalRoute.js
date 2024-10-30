@@ -8,7 +8,7 @@ const router = express.Router();
 
 const createWeekJournal = async (req, res) => {
   const { main_title, title, body } = req.body;
-  const { user } = req.user;
+
   try {
     const data = {
       main_title: main_title,
