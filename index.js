@@ -11,7 +11,10 @@ const port = 9000;
 connectToMongo();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://mood-tracker-journal-frontend.vercel.app/",
+    ],
   })
 );
 app.use(express.json());

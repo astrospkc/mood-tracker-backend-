@@ -98,6 +98,30 @@ const summarizeWeekJournal = async (req, res) => {
   }
 };
 
+const updateDayJournal = async (req, res) => {
+  const { id } = req.params;
+  const { title, body } = req.body;
+  try {
+    const newJournal = {};
+    if (title) {
+      newJournal.title = title;
+    }
+    if (body) {
+      newJournal.body = body;
+    }
+    const dayJournal = await WeekJournal.findByIdAndUpdate(
+      id,
+      { $set: newJournal },
+      { new: true }
+    );
+    res.json(dayJournal);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal error occurred");
+  }
+};
+
+router.put("/updateDayJournal/:id", fetchuser, updateDayJournal);
 router.post("/create", fetchuser, createWeekJournal);
 router.get("/fetchJournal/:id", fetchuser, fetchWeekJournal);
 router.get("/summarizeJournal/:id", fetchuser, summarizeWeekJournal);
