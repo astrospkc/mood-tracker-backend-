@@ -4,6 +4,7 @@ import fetchuser from "../middleware/fetchUser.js";
 import Journal from "../models/Journal.js";
 import e from "express";
 import { run } from "../openAI.js";
+import { removedayjournal } from "./journalRoute.js";
 const router = express.Router();
 
 const createWeekJournal = async (req, res) => {
@@ -90,7 +91,7 @@ const summarizeWeekJournal = async (req, res) => {
     const weekdata_to_summarize = await fetchweekdata(user_id, id);
 
     const summarize = await run(weekdata_to_summarize);
-    console.log("summarize: ", summarize);
+    // console.log("summarize: ", summarize);
     res.status(200).json(summarize);
   } catch (error) {
     console.error(error);
@@ -121,9 +122,41 @@ const updateDayJournal = async (req, res) => {
   }
 };
 
+const deleteDayJournal = async (req, res) => {
+  // console.log(req.body);
+  console.log(" day id: ", req.params.id);
+  try {
+    // find the note to be updated and update it
+    let journal = await WeekJournal.findById(req.params.id);
+    console.log("journal: ", journal);
+    if (!journal) {
+      return res.status(404).send("Not Found");
+    }
+
+    if (journal.user.toString() !== req.user.id) {
+      return res.status(401).send("Not allowed");
+    }
+
+    journal = await WeekJournal.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
+
+    // delete the same journal from the main journals array
+    const user = journal.user;
+    const journal_id = journal.main_title;
+    const data = await removedayjournal(user, journal_id, req.params.id);
+    console.log("data after removing day journal: ", data);
+    // console.log("Deleted note: " + note);
+    res.json({ Success: "Day journal has been deleted.", journal: journal });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal error occurred");
+  }
+};
+
 router.put("/updateDayJournal/:id", fetchuser, updateDayJournal);
 router.post("/create", fetchuser, createWeekJournal);
 router.get("/fetchJournal/:id", fetchuser, fetchWeekJournal);
 router.get("/summarizeJournal/:id", fetchuser, summarizeWeekJournal);
 router.get("/fetchJournal/:id/:day_id", fetchuser, fetchWeekDayJournalwith_id);
+router.delete("/deleteDayJournal/:id", fetchuser, deleteDayJournal);
+
 export default router;

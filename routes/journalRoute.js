@@ -2,9 +2,11 @@ import express from "express";
 import fetchuser from "../middleware/fetchUser.js";
 const router = express.Router();
 import Journal from "../models/Journal.js";
+import User from "../models/User.js";
 // import { body, validationResult } from "express-validator";
 
 // Route 1: Fetch user data  GET: journals/fetchdata , Login required
+
 const fetchData = async (req, res) => {
   // console.log("fetch data ", req.body);
   try {
@@ -87,21 +89,22 @@ const updateJournal = async (req, res) => {
     res.status(500).send("Internal error occurred");
   }
 };
+
 // Route 4: Delete a note: DELETE: journals/deletenote/:id , Login required
 const deleteJournal = async (req, res) => {
   // console.log(req.body);
   try {
     // find the note to be updated and update it
-    let note = await Journals.findById(req.params.id);
-    if (!note) {
+    let journal = await Journal.findById(req.params.id);
+    if (!journal) {
       return res.status(404).send("Not Found");
     }
 
-    if (note.user.toString() !== req.user.id) {
+    if (journal.user.toString() !== req.user.id) {
       return res.status(401).send("Not allowed");
     }
 
-    note = await Journals.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
+    journal = await Journal.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
     // console.log("Deleted note: " + note);
     res.json({ Success: "Note has been deleted.", note: note });
   } catch (error) {
@@ -125,6 +128,41 @@ const searchJournal = async (req, res) => {
     res.status(500).json({ error: "An error occurred while searching notes." });
   }
 };
+
+export const removedayjournal = async (user_id, journal_id, dayJournal_id) => {
+  console.log("user id: ", user_id, " --- ", journal_id, " ", dayJournal_id);
+  const user_exist = await User.findById(user_id);
+  if (user_exist) {
+    const journal_exist = await Journal.findById(journal_id);
+
+    if (journal_exist) {
+      const journals = journal_exist.journals;
+      for (let i = 0; i < journals.length; i++) {
+        if (journals[i].toString() === dayJournal_id) {
+          journals.splice(i, 1);
+          break;
+        }
+      }
+      console.log("journals: ", journals);
+      journal_exist.journals = journals;
+      return journal_exist.save();
+    } else {
+      console.log("journal not found");
+    }
+  } else {
+    console.log("user not found");
+  }
+};
+
+// const removeDayJournalFromJournal = async (req, res) => {
+//   try {
+//     const removedData = await removedayjournal(req.user.id, req.params.id);
+//     res.status(200).json(removedData);
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).send("Internal error occurred");
+//   }
+// };
 
 router.get("/fetchData", fetchuser, fetchData);
 router.get("/fetchData/:id", fetchuser, fetchJournalwith_id);
