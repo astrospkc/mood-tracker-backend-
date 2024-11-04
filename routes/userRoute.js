@@ -48,7 +48,7 @@ router.post(
       const authtoken = jwt.sign(data, JWT_SECRET);
       success = true;
 
-      console.log(authtoken);
+      console.log("trying to create user");
 
       res.json({ success, authtoken });
     } catch (error) {
@@ -88,6 +88,8 @@ router.post(
           id: user.id,
         },
       };
+
+      console, log("login");
 
       // const authtoken = jwt.sign({ data }, JWT_SECRET, { expiresIn: "1h" });
       const authtoken = jwt.sign(data, JWT_SECRET);
