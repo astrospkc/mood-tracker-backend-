@@ -89,7 +89,7 @@ router.post(
         },
       };
 
-      console, log("login");
+      console.log("login");
 
       // const authtoken = jwt.sign({ data }, JWT_SECRET, { expiresIn: "1h" });
       const authtoken = jwt.sign(data, JWT_SECRET);
