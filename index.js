@@ -9,9 +9,13 @@ import cors from "cors";
 const app = express();
 const port = 9000;
 connectToMongo();
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mood-tracker-journal-frontend.vercel.app",
+];
 app.use(
   cors({
-    origin: "https://mood-tracker-journal-frontend.vercel.app",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
