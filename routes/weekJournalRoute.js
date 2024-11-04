@@ -1,10 +1,11 @@
-import express from "express";
+import express, { text } from "express";
 import WeekJournal from "../models/WeekJournals.js";
 import fetchuser from "../middleware/fetchUser.js";
 import Journal from "../models/Journal.js";
 import e from "express";
 import { run } from "../openAI.js";
 import { removedayjournal } from "./journalRoute.js";
+
 const router = express.Router();
 
 const createWeekJournal = async (req, res) => {
@@ -91,7 +92,8 @@ const summarizeWeekJournal = async (req, res) => {
     const weekdata_to_summarize = await fetchweekdata(user_id, id);
 
     const summarize = await run(weekdata_to_summarize);
-    // console.log("summarize: ", summarize);
+    // const jsonSummary = JSON.parse(summarize);
+    await Journal.updateOne({ _id: id }, { $set: { emotions: summarize } });
     res.status(200).json(summarize);
   } catch (error) {
     console.error(error);

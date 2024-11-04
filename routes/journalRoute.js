@@ -106,7 +106,7 @@ const deleteJournal = async (req, res) => {
 
     journal = await Journal.findByIdAndDelete(req.params.id); // here new:true means if any new content comes it will get updated
     // console.log("Deleted note: " + note);
-    res.json({ Success: "Note has been deleted.", note: note });
+    res.json({ Success: "Journal has been deleted.", journal: journal });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal error occurred");
@@ -168,7 +168,7 @@ router.get("/fetchData", fetchuser, fetchData);
 router.get("/fetchData/:id", fetchuser, fetchJournalwith_id);
 router.post("/addJournal", fetchuser, addJournal);
 router.put("/edit", fetchuser, updateJournal);
-router.delete("/deleteJournal", fetchuser, deleteJournal);
+router.delete("/deleteJournal/:id", fetchuser, deleteJournal);
 router.get("/searchJournal", fetchuser, searchJournal);
 
 export default router;
