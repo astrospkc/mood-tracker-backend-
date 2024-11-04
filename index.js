@@ -7,8 +7,7 @@ import weekJournalRouter from "./routes/weekJournalRoute.js";
 import cors from "cors";
 
 const app = express();
-const port = 9000;
-connectToMongo();
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://mood-tracker-journal-frontend.vercel.app",
@@ -21,6 +20,8 @@ app.use(
     credentials: true,
   })
 );
+const port = 9000;
+connectToMongo();
 app.use(express.json());
 
 app.use("/api/auth", userRouter);
