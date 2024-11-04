@@ -10,7 +10,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://mood-tracker-journal-frontend-avmnn0slq-astrospkcs-projects.vercel.app",
+  "https://mood-tracker-journal-frontend.vercel.app/",
 ];
 app.use(
   cors({
