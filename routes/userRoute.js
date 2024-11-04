@@ -102,7 +102,7 @@ router.post(
       // }
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Internal error occurred");
+      res.status(500).send("Internal error occurred", error.message);
     }
   }
 );
