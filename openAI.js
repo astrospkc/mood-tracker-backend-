@@ -27,7 +27,7 @@ export async function run(data) {
     }
     // console.log("text: ", text);
     // prompt = `writer's emotion through this jouranal : ${text}, mention only the key points in list.No explanation please. The result should be in json format.`;
-    prompt = `based on this text, rate from 0-10 scale, the anger, joy, sadness, happiness, chilled , adventurous , loneliness, overall rate the emotions : ${text}. mention all the rating in json format , overall what the status of the author's emotions  `;
+    prompt = `based on this text, rate from 0-10 scale, the anger, joy, sadness, happiness, chilled , adventurous , loneliness, overall rate the emotions : ${text}. mention all the rating in json format and also add one more section where you mention the tips and improvements for the author to how to work on these emotions , overall what the status of the author's emotions  `;
     const result = await model.generateContent(prompt);
     // console.log("Result : ", result);
     // console.log("text : ", result.response.text());
