@@ -94,6 +94,7 @@ const summarizeWeekJournal = async (req, res) => {
     const summarize = await run(weekdata_to_summarize);
     // const jsonSummary = JSON.parse(summarize);
     await Journal.updateOne({ _id: id }, { $set: { emotions: summarize } });
+    console.log("summarize: ", summarize);
     res.status(200).json(summarize);
   } catch (error) {
     console.error(error);
