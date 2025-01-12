@@ -3,7 +3,14 @@ import fetchuser from "../middleware/fetchUser.js";
 const router = express.Router();
 import Journal from "../models/Journal.js";
 import User from "../models/User.js";
+import { v2 as cloudinary } from "cloudinary";
 // import { body, validationResult } from "express-validator";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_SECRET_KEY,
+});
 
 // Route 1: Fetch user data  GET: journals/fetchdata , Login required
 
@@ -38,14 +45,22 @@ const addJournal = async (req, res) => {
   console.log("Inside add journal:", req.body);
   const { title } = req.body;
   try {
-    const journal = new Journal({
-      title,
-
-      user: req.user.id,
+    const file = req.files.img;
+    cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        const journal = new Journal({
+          title,
+          img: result.secure_url,
+          user: req.user.id,
+        });
+        const savedJournal = await journal.save();
+        console.log("savedJournal", savedJournal);
+        res.json(savedJournal);
+      }
     });
-    const savedJournal = await journal.save();
-    console.log("savedJournal", savedJournal);
-    res.json(savedJournal);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal error occurred");
@@ -127,6 +142,14 @@ const searchJournal = async (req, res) => {
     // Send an error response
     res.status(500).json({ error: "An error occurred while searching notes." });
   }
+};
+
+// Route 7: edit the journal card
+
+const editJournal = async (req, res) => {
+  const { title } = req.body;
+  const image = req.files.img;
+  const { id } = req.params;
 };
 
 export const removedayjournal = async (user_id, journal_id, dayJournal_id) => {

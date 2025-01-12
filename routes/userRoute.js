@@ -107,6 +107,19 @@ router.post(
   }
 );
 
+// ROUTE 2: get user details, POST : "api/auth/getuser" Login required
+router.get("/getuser", fetchuser, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log("user id: ", userId);
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal error occurred");
+  }
+});
+
 // ROUTE 3: get user details, POST : "api/auth/getuser" Login required
 router.get("/getuser/:userid", fetchuser, async (req, res) => {
   try {

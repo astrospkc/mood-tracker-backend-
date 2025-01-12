@@ -1,20 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const EmotionSchema = new Schema(
-  {
-    anger: { type: Number, default: 0 },
-    joy: { type: Number, default: 0 },
-    sadness: { type: Number, default: 0 },
-    happiness: { type: Number, default: 0 },
-    chilled: { type: Number, default: 0 },
-    adventurous: { type: Number, default: 0 },
-    loneliness: { type: Number, default: 0 },
-    overall: { type: String, default: "Positive" }, // You might want to restrict this to specific values
-  },
-  { _id: false } // Prevents Mongoose from creating an _id for this sub-document
-);
-
 const JournalSchema = new Schema(
   {
     user: {

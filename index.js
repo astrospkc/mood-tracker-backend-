@@ -5,6 +5,7 @@ import userRouter from "./routes/userRoute.js";
 import journalRouter from "./routes/journalRoute.js";
 import weekJournalRouter from "./routes/weekJournalRoute.js";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 
 const app = express();
 
@@ -19,7 +20,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
 app.options(
   "*",
   cors({
