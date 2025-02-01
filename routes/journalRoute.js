@@ -15,11 +15,9 @@ cloudinary.config({
 // Route 1: Fetch user data  GET: journals/fetchdata , Login required
 
 const fetchData = async (req, res) => {
-  // console.log("fetch data ", req.body);
   try {
-    // console.log("fetching data....");
     const journals = await Journal.find({ user: req.user.id });
-    // console.log("notes: ", notes);
+
     res.json(journals);
   } catch (error) {
     console.error(error.message);
@@ -34,14 +32,12 @@ const fetchJournalwith_id = async (req, res) => {
     const journal = await Journal.findById(id);
     res.json(journal);
   } catch (error) {
-    console.error(error.message);
     res.status(500).send("Internal error occurred");
   }
 };
 
 // Route 1: Add notes POST: journals/addnotes , Login required
 const addJournal = async (req, res) => {
-  //   console.log("user id: ", req.user.id);
   console.log("Inside add journal:", req.body);
   const { title } = req.body;
   try {
@@ -50,14 +46,13 @@ const addJournal = async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
         const journal = new Journal({
           title,
           img: result.secure_url,
           user: req.user.id,
         });
         const savedJournal = await journal.save();
-        console.log("savedJournal", savedJournal);
+
         res.json(savedJournal);
       }
     });
@@ -68,9 +63,8 @@ const addJournal = async (req, res) => {
 };
 // Route 3: update notes PUT: journals/updatenotes , Login required
 const updateJournal = async (req, res) => {
-  // console.log("getting the id", req.user.id);
   const { title } = req.body;
-  // console.log("update:", req.body);
+
   try {
     // create new note object
     const newJournal = {};
@@ -78,16 +72,14 @@ const updateJournal = async (req, res) => {
       newJournal.title = title;
     }
 
-    // console.log("newNote:", newNote);
-
     // find the note to be updated and update it
-    // console.log(req.params.id);
+
     let journal = await Journal.findById(req.params.id);
-    // console.log("note:", note);
+
     if (!journal) {
       return res.status(404).send("Not Found");
     }
-    // console.log("note user:", note.user);
+
     if (journal.user.toString() !== req.user.id) {
       return res.status(401).send("Not allowed");
     }
